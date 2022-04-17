@@ -7,8 +7,9 @@
 		"alarms"
 	],
 	"icons" : {
-		"16" : "icon16.png",
-		"48" : "icon48.png"
+		"16" : "icon16.jpg",
+		"19" : "icon19.jpg",
+		"48" : "icon48.jpg"
 	},
 	"action": {
 		"default_title": "mildomflow",
