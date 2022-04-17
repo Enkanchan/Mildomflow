@@ -12,8 +12,8 @@ async function main(e) {
     //オブザーバインスタンス作成(message-listにnodeが追加されたら動かす)
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-            var list = document.querySelector('.message-list');
-            var inBlocks = list.lastElementChild.querySelector('.jYCNsb');
+            let list = document.querySelector('.message-list');
+            let inBlocks = list.lastElementChild.querySelector('.jYCNsb');
             console.log(inBlocks); //最後のNodeを取得(debug)
             createText(inBlocks.textContent,stage,container,div); //流す処理に受け渡す(Text,createjs描画オブジェクト,格納コンテナ,canvas)
         });
@@ -32,10 +32,6 @@ async function main(e) {
     const clientRect = document.querySelector('.player-content').getBoundingClientRect(); //配信領域の寸法取得
     div.style.position='absolute';
     div.style.zIndex = 10;
-    /*console.log(clientRect.top);
-    console.log(clientRect.left);
-    console.log(clientRect.height);
-    console.log(clientRect.width);*/
     div.style.top=clientRect.top + 'px';
     div.style.left=clientRect.left + 'px';
     div.style.height=clientRect.height + 'px';
@@ -67,7 +63,7 @@ async function createText(msg,stage,container,div) {
         div.style.height=clientRect.height + 'px';
     }
 
-    var animatetext = new createjs.Text(msg, "10px bold", "White"); //生成テキスト
+    const animatetext = new createjs.Text(msg, "10px bold", "White"); //生成テキスト
     const MaxPosX = Math.round(document.documentElement.clientWidth);
     container.addChild(animatetext);
     console.log(clientRect.height);
