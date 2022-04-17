@@ -71,8 +71,9 @@ async function createText(msg,stage,container,div) {
     animatetext.x = MaxPosX / 2;
     animatetext.y = Math.round (Math.random()*clientRect.height) / 3;
     //animatetext.outline = 1;
+    console.log(msg.length*10);
     createjs.Tween.get(animatetext)
-            .to({x:-200-animatetext.scaleX},7000);
+            .to({x:-100-msg.length*10},7000);
     createjs.Ticker.addEventListener("tick", handleTick);
     function handleTick() {
         stage.update();
