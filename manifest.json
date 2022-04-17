@@ -1,0 +1,29 @@
+{
+	"manifest_version": 3,
+	"name": "mildomflow",
+	"version": "1.0",
+	"permissions":[
+		"tabs",
+		"alarms"
+	],
+	"icons" : {
+		"16" : "icon16.png",
+		"48" : "icon48.png"
+	},
+	"action": {
+		"default_title": "mildomflow",
+		"default_popup": "popup.html"
+	},
+	"description": "flow mildom comments.",
+	"content_scripts":[
+        {
+            "matches": [
+                "https://www.mildom.com/*"
+            ],
+            "js": ["easeljs.min.js","tweenjs.min.js","content_scripts.js"],
+			"run_at": "document_end",
+      		"all_frames": true
+        }
+    ]
+	
+}
