@@ -63,7 +63,7 @@ async function createText(msg,stage,container,div) {
         div.style.height=clientRect.height + 'px';
     }
 
-    const animatetext = new createjs.Text(msg, "10px bold", "White"); //生成テキスト
+    const animatetext = new createjs.Text(msg, "bold 1em sans-serif", "White"); //生成テキスト
     const MaxPosX = Math.round(clientRect.width);
     container.addChild(animatetext);
     console.log(clientRect.height);
@@ -72,7 +72,7 @@ async function createText(msg,stage,container,div) {
     animatetext.y = Math.round (Math.random()*clientRect.height) / 3;
     //animatetext.outline = 1;
     createjs.Tween.get(animatetext)
-            .to({x:-200},7000);
+            .to({x:-200-animatetext.scaleX},7000);
     createjs.Ticker.addEventListener("tick", handleTick);
     function handleTick() {
         stage.update();
