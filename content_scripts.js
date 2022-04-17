@@ -64,14 +64,15 @@ async function createText(msg,stage,container,div) {
     }
 
     const animatetext = new createjs.Text(msg, "10px bold", "White"); //生成テキスト
-    const MaxPosX = Math.round(document.documentElement.clientWidth);
+    const MaxPosX = Math.round(clientRect.width);
     container.addChild(animatetext);
     console.log(clientRect.height);
-    animatetext.x = -100;
-    animatetext.y = Math.round (Math.random()*clientRect.height) / 3; //何故か3で割るとピッタリ収まる
+    console.log(clientRect.width);
+    animatetext.x = MaxPosX / 2;
+    animatetext.y = Math.round (Math.random()*clientRect.height) / 3;
     //animatetext.outline = 1;
     createjs.Tween.get(animatetext)
-            .to({x:MaxPosX},12000);
+            .to({x:-200},7000);
     createjs.Ticker.addEventListener("tick", handleTick);
     function handleTick() {
         stage.update();
