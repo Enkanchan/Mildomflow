@@ -1,10 +1,51 @@
 
 window.addEventListener("load", main, false); //ロード待ち
 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-//コメントを捕まえる
+document.body.insertAdjacentHTML('afterbegin', '<div id="p5Canvas"></div>') //bodyに埋め込む
+var CommentPopPosX;
+var CommentPopPosY;
+var CommentText = [];
+var CommentTextPosX = [];
+var CommentTextPosY = [];
+for(let i=0;i<30;i++){
+    CommentText[i] = 'null';
+    CommentTextPosX[i]=0;
+    CommentTextPosY[i]=0;
+}
+
+function setup(){
+    console.log("p5 start");
+    let canvas = createCanvas(400, 400);
+    canvas.parent('p5Canvas');
+}
+
+function draw() {
+    //ellipse(width / 2, height / 2, 200, 200);
+    clear();
+    //background(0);
+    fill(255);
+    textSize(20);
+    for(let i=0; i<30; i++){
+        if(CommentText[i] !== 'null'){
+            text(CommentText[i], CommentTextPosX[i], CommentTextPosY[i]-20);
+            CommentTextPosX[i]=CommentTextPosX[i]-2;
+            if(CommentTextPosX[i] <= (0 - textWidth(CommentText[i]))){
+                CommentText[i] = 'null';
+            }
+
+        }
+    } 
+}
+
 async function main(e) {
+    console.log(CommentText[0]);
     await _sleep(2000); //読み込み前に発動してオブザーバが時々スカるので待つ
 
+    //p5canvas 寸法設定など
+    var clientRect = document.querySelector('.player-content').getBoundingClientRect(); //配信領域の寸法取得
+    p5Canvas.style.top=clientRect.top + 'px';
+    p5Canvas.style.left=clientRect.left + 'px';
+    resizeCanvas(clientRect.width, clientRect.height);
 
     //コメントノード(全体)
     const target = document.querySelectorAll(".message-list")[0]; //取得出来ないとヤバいので見つかるまで後でループにする(sleepを消して)
@@ -12,10 +53,28 @@ async function main(e) {
     //オブザーバインスタンス作成(message-listにnodeが追加されたら動かす)
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
+            clientRect = document.querySelector('.player-content').getBoundingClientRect(); //配信領域の寸法取得
+            CommentPopPosX = clientRect.width;
+            CommentPopPosY = clientRect.height;
+            p5Canvas.style.top=clientRect.top + 'px';
+            p5Canvas.style.left=clientRect.left + 'px';
+            resizeCanvas(clientRect.width, clientRect.height);
             let list = document.querySelector('.message-list');
             let inBlocks = list.lastElementChild.querySelector('.jYCNsb');
-            console.log(inBlocks); //最後のNodeを取得(debug)
-            createText(inBlocks.textContent,stage,container,div); //流す処理に受け渡す(Text,createjs描画オブジェクト,格納コンテナ,canvas)
+
+            for(let i=0;i<30;i++){
+                if(CommentText[i] == 'null'){
+                    CommentText[i] = inBlocks.textContent;
+                    CommentTextPosX[i] = CommentPopPosX;
+                    CommentTextPosY[i] = Math.round (Math.random()*clientRect.height);
+                    console.log("実行" + i)//
+                    console.log(CommentText[i]);
+                    break;
+                
+                }
+            }
+
+            console.log(inBlocks);
         });
     });
 
@@ -26,61 +85,9 @@ async function main(e) {
 
     //オブザーバ初期処理 
     console.clear(); //一旦消してから
-    
-    //canvas生成(コメント描画領域,範囲ズレ矯正は呼び出し関数内で行う)
-    const div = document.createElement('canvas');
-    const clientRect = document.querySelector('.player-content').getBoundingClientRect(); //配信領域の寸法取得
-    div.style.position='absolute';
-    div.style.zIndex = 10;
-    div.style.top=clientRect.top + 'px';
-    div.style.left=clientRect.left + 'px';
-    div.style.height=clientRect.height + 'px';
-    div.style.width=clientRect.width + 'px';
-    div.style.pointerEvents='none';
-    document.body.appendChild(div);
-    //ここまで
-
-    //createjs 初期設定
-    const canvasObject = div;
-    const stage = new createjs.Stage(canvasObject);
-    const container = new createjs.Container();
-    stage.addChild(container);
-    //ここまで 更新処理は呼び出し関数内で行う
 
     //オブザーバ実行
     observer.observe(target, config);
     
 }
 
-//文字列を生成して流す
-async function createText(msg,stage,container,div) {
-    console.log("呼び出し検知")//
-    const clientRect = document.querySelector('.player-content').getBoundingClientRect(); //配信領域の寸法取得
-
-    //canvasの大きさが食い違っていたら矯正する
-    if(div.style.height != clientRect.height){
-        div.style.width=clientRect.width + 'px';
-        div.style.height=clientRect.height + 'px';
-    }
-
-    const animatetext = new createjs.Text(msg, "bold 1em sans-serif", "White"); //生成テキスト
-    const MaxPosX = Math.round(clientRect.width);
-    container.addChild(animatetext);
-    console.log(clientRect.height);
-    console.log(clientRect.width);
-    animatetext.x = MaxPosX / 2;
-    animatetext.y = Math.round (Math.random()*clientRect.height) / 3;
-    //animatetext.outline = 1;
-    console.log(msg.length*10);
-    createjs.Tween.get(animatetext)
-            .to({x:-100-msg.length*10},7000);
-    createjs.Ticker.addEventListener("tick", handleTick);
-    function handleTick() {
-        stage.update();
-    }
-    //console.log(container.children)
-    //個数限界を超えたら消す
-    if(typeof container.children[30] !== 'undefined'){
-        container.removeChild(container.children[1]);
-    }
-}
