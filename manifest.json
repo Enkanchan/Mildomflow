@@ -21,7 +21,7 @@
             "matches": [
                 "https://www.mildom.com/*"
             ],
-            "js": ["p5.min.js","easeljs.min.js","tweenjs.min.js","content_scripts.js"],
+            "js": ["p5.min.js","content_scripts.js"],
 			"css": ["p5.css"],
 			"run_at": "document_end",
       		"all_frames": true

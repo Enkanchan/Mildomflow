@@ -27,7 +27,7 @@ function draw() {
     textSize(20);
     for(let i=0; i<30; i++){
         if(CommentText[i] !== 'null'){
-            text(CommentText[i], CommentTextPosX[i], CommentTextPosY[i]-20);
+            text(CommentText[i], CommentTextPosX[i], CommentTextPosY[i]-10);
             CommentTextPosX[i]=CommentTextPosX[i]-2;
             if(CommentTextPosX[i] <= (0 - textWidth(CommentText[i]))){
                 CommentText[i] = 'null';
