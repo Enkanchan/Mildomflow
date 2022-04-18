@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>popup</title>
-  <style>
-    #canvas {
-        background: #666;
-      }
-  </style>
+<meta charset="UTF-8">
+<title>popup</title>
+<link rel="stylesheet" href="popup.css">
 </head>
 <body>
+  <p>コメント最大表示数を設定(20-50)</p>
+  <input type="range" id="commentSlider" min="20" max="50" step="1" value="30">
+  <p><span id="commentAmount" value="30"></span></p>
+  <script src="popup.js"></script>
 </body>
 </html>
