@@ -1,12 +1,11 @@
-
-window.addEventListener("load", main, false); //ロード待ち
+window.addEventListener("load", main, false);
 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 document.body.insertAdjacentHTML('afterbegin', '<div id="p5Canvas"></div>') //bodyに埋め込む
-var CommentPopPosX;
-var CommentPopPosY;
-var CommentText = [];
-var CommentTextPosX = [];
-var CommentTextPosY = [];
+let CommentPopPosX;
+let CommentPopPosY;
+let CommentText = [];
+let CommentTextPosX = [];
+let CommentTextPosY = [];
 for(let i=0;i<30;i++){
     CommentText[i] = 'null';
     CommentTextPosX[i]=0;
@@ -25,8 +24,8 @@ function draw() {
     textSize(20);
     for(let i=0; i<30; i++){
         if(CommentText[i] !== 'null'){
-            text(CommentText[i], CommentTextPosX[i], CommentTextPosY[i]+5);
-            CommentTextPosX[i]=CommentTextPosX[i]-2;
+            text(CommentText[i], CommentTextPosX[i], CommentTextPosY[i]+15);
+            CommentTextPosX[i]=CommentTextPosX[i]-2-(Math.round(textWidth(CommentText[i]) / 500));
             if(CommentTextPosX[i] <= (0 - textWidth(CommentText[i]))){
                 CommentText[i] = 'null';
             }
@@ -35,23 +34,37 @@ function draw() {
     } 
 }
 
-async function main(e) {
-    await _sleep(2000); //読み込み前に発動してオブザーバが時々スカるので待つ
-    const LIVE_OR_ARCHIVE = document.querySelector('.hhJHOj') ? 1 : 0; //1 = archive
+function catchContents(elementName){
+    getElement = document.querySelector(elementName);
+    return getElement;
+}
 
+async function main(e) {
+    console.log("start");
+    //const LIVE_OR_ARCHIVE = document.querySelector('.hhJHOj') ? 1 : 0; //1:archive
     //p5canvas 寸法設定など
+    let clientRect
+
+    while(!document.querySelector('.player-content') && !document.querySelector('.wrapper')){
+        await _sleep(2000);
+    }
+
+    /*
     if(document.querySelector('.player-content')){
-        var clientRect = document.querySelector('.player-content').getBoundingClientRect(); //配信領域の寸法取得
+        clientRect = document.querySelector('.player-content').getBoundingClientRect(); //配信領域の寸法取得
     }
     else{
-        var clientRect = document.querySelector('.wrapper').getBoundingClientRect();
+        clientRect = document.querySelector('.wrapper').getBoundingClientRect();
     }
     p5Canvas.style.top=clientRect.top + 'px';
     p5Canvas.style.left=clientRect.left + 'px';
     resizeCanvas(clientRect.width, clientRect.height);
-
+    */
     //コメントノード(全体)
-    const target = document.querySelectorAll(".message-list")[0]; //取得出来ないとヤバいので見つかるまで後でループにする(sleepを消して)
+    while(!document.querySelector('.message-list')){
+        await _sleep(2000);
+    }
+    let target = document.querySelectorAll(".message-list")[0]; //後でタブ切り替わったら取得し直すようにしとく
     
     //オブザーバインスタンス作成(message-listにnodeが追加されたら動かす)
     const observer = new MutationObserver((mutations) => {
@@ -80,15 +93,13 @@ async function main(e) {
                     if(inBlocks){
                         CommentText[i] = inBlocks.textContent;
                         CommentTextPosX[i] = CommentPopPosX;
-                        CommentTextPosY[i] = Math.round (Math.random()*clientRect.height);
-                        console.log("実行" + i)//
+                        CommentTextPosY[i] = Math.round (Math.random()*(clientRect.height-15));
+                        console.log("実行" + i)
                         console.log(CommentText[i]);
                         break;
                     }
                 }
             }
-
-            console.log(inBlocks);
         });
     });
 

@@ -1,8 +1,8 @@
 function runSettings() {
-    var elem = document.getElementById('commentSlider');
-    var target = document.getElementById('commentAmount');
+    let elem = document.getElementById('commentSlider');
+    let target = document.getElementById('commentAmount');
     target.innerHTML = 30;
-    var rangeValue = function (elem, target) {
+    let rangeValue = function (elem, target) {
         return function(evt){
             target.innerHTML = elem.value;
         }
